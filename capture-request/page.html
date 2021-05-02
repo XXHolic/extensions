@@ -8,29 +8,56 @@
   <body>
     <div class="container">
       <div class="flex-align container-operate">
-        <input class="operate-input"  />
-        <button class="operate-btn" id="operate-filter">筛选</button>
-        <button class="operate-btn" id="operate-export">导出 JSON </button>
+        <div>
+          <input class="operate-input" id="filterValue" />
+          <button class="operate-btn" id="operate-filter">筛选</button>
+          <button class="operate-btn" id="operate-clear">清除</button>
+        </div>
+        <button class="operate-btn" id="operate-export">导出筛选 JSON </button>
       </div>
       <div class="list">
-        <table class="table">
-          <thead class="table-head">
-            <tr>
-              <th class="table-tr table-tr-width1">requestId</th>
-              <th class="table-tr table-tr-width2">method</th>
-              <th class="table-tr table-tr-width3">url</th>
-              <th class="table-tr table-tr-width4">ip</th>
-            </tr>
-          </thead>
-          <tbody id="reqList">
-            <!-- <tr class="table-body-tr">
-              <td class="table-td">January</td>
-              <td>$100</td>
-              <td>$100</td>
-              <td>$100</td>
-            </tr> -->
-          </tbody>
-        </table>
+        <div class="list-left mr10">
+          <p>请求列表</p>
+          <table class="table">
+            <thead class="table-head">
+              <tr>
+                <th class="table-tr table-tr-width1">requestId</th>
+                <!-- <th class="table-tr table-tr-width2">method</th> -->
+                <th class="table-tr">url</th>
+                <!-- <th class="table-tr table-tr-width4">ip</th> -->
+              </tr>
+            </thead>
+            <tbody id="reqList">
+              <!-- <tr class="table-body-tr">
+                <td class="table-td">January</td>
+                <td>$100</td>
+                <td>$100</td>
+                <td>$100</td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
+        <div class="list-right">
+          <p>筛选结果</p>
+          <table class="table">
+            <thead class="table-head">
+              <tr>
+                <th class="table-tr table-tr-width1">requestId</th>
+                <!-- <th class="table-tr table-tr-width2">method</th> -->
+                <th class="table-tr table-tr-width3">url</th>
+                <!-- <th class="table-tr table-tr-width4">ip</th> -->
+              </tr>
+            </thead>
+            <tbody id="resultList">
+              <!-- <tr class="table-body-tr">
+                <td class="table-td">January</td>
+                <td>$100</td>
+                <td>$100</td>
+                <td>$100</td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <script src="page.js"></script>

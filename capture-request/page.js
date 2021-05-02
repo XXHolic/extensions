@@ -1,7 +1,7 @@
 window.onload = () => {
-  let localShowList = []; // 这个是页面真正展示的数据
+  let localFilterList = []; // 页面筛选的数据
 
-  const createEle = (tag, { className, text }) => {
+  const createEle = (tag, { className, text, showTitle = false }) => {
     const ele = document.createElement(tag)
     if (text) {
       const textEle = document.createTextNode(text)
@@ -9,6 +9,9 @@ window.onload = () => {
     }
     if (className) {
       ele.setAttribute('class', className)
+    }
+    if (showTitle) {
+      ele.setAttribute('title', text)
     }
     return ele;
   }
@@ -19,41 +22,82 @@ window.onload = () => {
   }
 
   const listContainer = document.querySelector('#reqList')
+  const filterResultContainer = document.querySelector('#resultList')
 
-  chrome.storage.onChanged.addListener(({ requestList }, areaName) => {
-    const { newValue } = requestList
-    const newItem = newValue[0] || null
-    const { requestId, initiator, method, type, url, ip, statusLine } = newItem
+
+
+  const creteRowEle = (data) => {
+    const { requestId, url } = data
     const cellClass = 'table-td'
     const requestIdEle = createEle('td', { className: `${cellClass}`, text: requestId })
-    const methodEle = createEle('td', { className: `${cellClass}`, text: method })
-    const urlEle = createEle('td', { className: `${cellClass}`, text: url })
-    const ipEle = createEle('td', { className: `${cellClass}`, text: ip })
+    const urlTdEle = createEle('td', { className: `${cellClass}`, text: '' })
+    const urlEle = createEle('div', { className: 'table-ellipsis', showTitle: true, text: url })
+    appendChildList(urlTdEle, [urlEle])
     const parentEle = createEle('tr', { className: 'table-body-tr' })
-    appendChildList(parentEle, [requestIdEle, methodEle, urlEle, ipEle])
+    appendChildList(parentEle, [requestIdEle, urlTdEle])
+    return parentEle
+  }
+
+  chrome.storage.onChanged.addListener((changeObj, areaName) => {
+    // console.log('page changeObj', changeObj)
+    const { requestList } = changeObj
+    if (areaName !== 'local' || !requestList) {
+      console.warn('requestList does not change')
+      return;
+    }
+    const { newValue } = requestList || { newValue: [] }
+    const newItem = newValue[0] || null
+    if (!newItem) {
+      console.warn('no data')
+      return;
+    }
+    const parentEle = creteRowEle(newItem)
     listContainer.appendChild(parentEle)
   })
 
   const operateEle = document.querySelector('#operate-filter')
+  const filterInputEle = document.querySelector('#filterValue')
+  const resultListEle = document.querySelector('#resultList')
   operateEle.addEventListener('click', () => {
-    chrome.storage.sync.get("requestList", ({ requestList }) => {
-      console.log(requestList)
+    chrome.storage.local.get("requestList", ({ requestList }) => {
+      const value = filterInputEle.value
+      if (!value) {
+        filterResultContainer.innerHTML = ''
+        return;
+      }
+      localFilterList = []
+      if (requestList && value) {
+        localFilterList = requestList.filter((ele) => {
+          return ele.url.indexOf(value) > -1
+        })
+      }
+      const rowEle = localFilterList.map(ele => {
+        return creteRowEle(ele)
+      })
+      appendChildList(filterResultContainer, rowEle)
     });
+  })
+
+  const clearEle = document.querySelector('#operate-clear')
+  clearEle.addEventListener('click', () => {
+    listContainer.innerHTML = ''
+    chrome.storage.local.set({ requestList: [] });
   })
 
   const exportEle = document.querySelector('#operate-export')
   exportEle.addEventListener('click', () => {
-    chrome.storage.sync.get("requestList", ({ requestList }) => {
-      console.log(requestList)
-      const txt = JSON.stringify(requestList)
-      let blob = new Blob([txt], { type: 'application/octet-stream' });
-      let dt = (new Date()).getSeconds();
-      chrome.downloads.download({
-        url: URL.createObjectURL(blob),
-        saveAs: true,
-        conflictAction: 'overwrite',
-        filename: dt + '.json'
-      });
+    if (!localFilterList.length) {
+      alert('无有效数据')
+      return;
+    }
+    const txt = JSON.stringify(localFilterList)
+    let blob = new Blob([txt], { type: 'application/octet-stream' });
+    let dt = (new Date()).getSeconds();
+    chrome.downloads.download({
+      url: URL.createObjectURL(blob),
+      saveAs: true,
+      conflictAction: 'overwrite',
+      filename: dt + '.json'
     });
   })
 

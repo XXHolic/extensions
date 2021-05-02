@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="button.css">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="page.css">
   </head>
   <body>
-    <div id="buttonDiv">
-    </div>
-    <div>
-      <p>Choose a different background color!</p>
+    <div class="options-container">
+      <div class="options-tip">过滤 URL 匹配规则设置，默认为 &lt;all_urls&gt; ，相关示例可见<a href="https://developer.chrome.com/docs/extensions/mv3/match_patterns/">文档</a>。</div>
+      <div class="flex-align mb10">
+        <div class="mr10">匹配规则</div>
+        <input class="operate-input" id="patternValue" />
+      </div>
+      <button class="operate-btn" id="apply">应用</button>
     </div>
   </body>
   <script src="options.js"></script>

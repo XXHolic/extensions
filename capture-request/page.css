@@ -10,6 +10,7 @@
 .container-operate {
   padding: 0 10px;
   height: 50px;
+  justify-content: space-between;
 }
 .operate-input {
   margin-right: 10px;
@@ -21,9 +22,15 @@
   margin-right: 10px;
 }
 .list  {
-  flex: 1;
+  display: flex;
   overflow-y: auto;
   padding: 0 10px 10px 10px;
+}
+.list-left {
+  flex: 1;
+}
+.list-right {
+  flex: 1;
 }
 
 .data-cell {
@@ -51,6 +58,16 @@
   text-align: left;
   padding: 10px 10px;
   word-break: break-all;
+
+}
+
+.table-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 /* .table-body-tr {
@@ -59,7 +76,7 @@
 
 
 .table .table-tr-width1 {
-  width: 10%;
+  width: 15%;
 }
 .table-tr-width2 {
   width: 10%;
@@ -69,4 +86,17 @@
 } */
 .table-tr-width4 {
   width: 10%;
+}
+
+.options-container {
+  padding: 0 10px;
+}
+.options-tip {
+  line-height: 30px;
+}
+.mb10 {
+  margin-bottom: 10px;
+}
+.mr10 {
+  margin-right: 10px;
 }
