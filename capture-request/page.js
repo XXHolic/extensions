@@ -1,5 +1,5 @@
 window.onload = () => {
-  let localFilterList = []; // 页面筛选的数据
+  let localFilterList = []; // 页面筛选后的数据
 
   const createEle = (tag, { className, text, showTitle = false }) => {
     const ele = document.createElement(tag)
@@ -41,6 +41,7 @@ window.onload = () => {
   chrome.storage.onChanged.addListener((changeObj, areaName) => {
     // console.log('page changeObj', changeObj)
     const { requestList } = changeObj
+    // 由于在 background.js 里面也监听了，所以要判断是不是 requestList 变动了
     if (areaName !== 'local' || !requestList) {
       console.warn('requestList does not change')
       return;
@@ -83,7 +84,7 @@ window.onload = () => {
     listContainer.innerHTML = ''
     chrome.storage.local.set({ requestList: [] });
   })
-
+  // 点击导出的按钮
   const exportEle = document.querySelector('#operate-export')
   exportEle.addEventListener('click', () => {
     if (!localFilterList.length) {
@@ -92,6 +93,7 @@ window.onload = () => {
     }
     const txt = JSON.stringify(localFilterList)
     let blob = new Blob([txt], { type: 'application/octet-stream' });
+    // 文件名称获取时间的秒数，可按照自己喜好定义
     let dt = (new Date()).getSeconds();
     chrome.downloads.download({
       url: URL.createObjectURL(blob),

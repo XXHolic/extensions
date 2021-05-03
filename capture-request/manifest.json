@@ -4,9 +4,10 @@
   "version": "1.0",
   "manifest_version": 3,
   "permissions": [
+    "scripting",
+    "tabs",
     "storage",
     "activeTab",
-    "scripting",
     "webRequest",
     "downloads"
   ],

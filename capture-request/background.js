@@ -1,4 +1,6 @@
+// 储存请求数据
 let requestList = []
+// 网址过滤的默认值
 let urlPattern = '<all_urls>'
 
 
@@ -20,18 +22,20 @@ chrome.action.onClicked.addListener(() => {
   });
 });
 
+// 监听请求事件的处理程序
 const handlerResponseStarted = (details) => {
+  // 找到处于激活状态的 Tab
   chrome.tabs.query({ active: true }, (tab) => {
-    // console.log('details', details)
     requestList.unshift(details)
     chrome.storage.local.set({ requestList });
     return { cancel: true };
   })
 }
 
+// 监听 storage 改变事件
 chrome.storage.onChanged.addListener((changeObj, areaName) => {
-  // console.log('background changeObj', changeObj)
   const { urlPattern } = changeObj
+  // 由于在 page.html 里面也监听了，所以要判断是不是 urlPattern 变动了
   if (areaName !== 'local' || !urlPattern) {
     console.warn('urlPattern does not change')
     return;
