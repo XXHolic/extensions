@@ -4,6 +4,6 @@ window.onload = function () {
   applyEle.addEventListener("click", (e) => {
     const value = patternValueEle.value || '<all_urls>'
     chrome.storage.local.set({ urlPattern: value });
-
+    alert('应用成功')
   });
 }
